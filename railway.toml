@@ -1,0 +1,13 @@
+# Railway config for the NestJS API (service root directory: backend/)
+# In the Railway dashboard → Service → Settings → Config file path: /backend/railway.toml
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+watchPatterns = ["/backend/**"]
+
+[deploy]
+healthcheckPath = "/"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
