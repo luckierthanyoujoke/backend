@@ -20,7 +20,8 @@ async function bootstrap() {
     origin: process.env.FRONTEND_URL ?? true,
     credentials: true,
   });
-  const port = process.env.PORT ?? 3000;
-  await app.listen(port);
+  const port = Number(process.env.PORT) || 3000;
+  const host = process.env.HOST ?? '0.0.0.0';
+  await app.listen(port, host);
 }
 void bootstrap();

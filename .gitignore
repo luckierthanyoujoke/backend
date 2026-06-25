@@ -3,3 +3,16 @@ node_modules
 .env
 # Local avatar files (when not using S3)
 uploads/
+
+# Deploy secrets (generated from local .env — never commit)
+deploy/config/backend.env
+deploy/config/railway-backend.vars
+deploy/config/railway-frontend.vars
+deploy/eb-option-settings.json
+angular-aspent
+diploma*zip
+
+# IDEs
+.idea/
+.vscode/
+.env

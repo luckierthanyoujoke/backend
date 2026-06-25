@@ -16,8 +16,9 @@ import { WebhooksModule } from './webhooks/webhooks.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      // Single file: backend/.env (resolved from package root, not process.cwd()).
+      // Local dev: backend/.env. In Docker/Railway, use injected env vars only.
       envFilePath: join(__dirname, '..', '.env'),
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
     }),
     PrismaModule,
     UsersModule,
