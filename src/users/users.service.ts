@@ -6,6 +6,10 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { StorageService } from '../storage/storage.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import {
+  canUserGenerateAiRecipe,
+  freeAiGenerationsRemaining,
+} from '../recipes/recipe-ai-access';
 
 @Injectable()
 export class UsersService {
@@ -24,6 +28,29 @@ export class UsersService {
       throw new NotFoundException(`User with id ${id} not found`);
     }
     return user;
+  }
+
+  /** Signed-in profile plus AI generation allowance (for `/users/me`). */
+  async getMeProfile(userId: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
+    const aiRecipeCount = await this.prisma.recipe.count({
+      where: { userId, isAI: true },
+    });
+    return {
+      ...user,
+      aiRecipeCount,
+      canGenerateAiRecipe: canUserGenerateAiRecipe(
+        user.isPremium,
+        aiRecipeCount,
+      ),
+      freeAiGenerationsRemaining: freeAiGenerationsRemaining(
+        user.isPremium,
+        aiRecipeCount,
+      ),
+    };
   }
 
   /** Public profile card (no email) for author pages. */

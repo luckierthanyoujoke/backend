@@ -33,7 +33,7 @@ export class UsersController {
         'Authentication required. Send a valid Clerk session token (Authorization: Bearer or __session cookie).',
       );
     }
-    return this.usersService.findById(user.id);
+    return this.usersService.getMeProfile(user.id);
   }
 
   @Post('avatar')

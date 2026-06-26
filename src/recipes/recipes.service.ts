@@ -19,6 +19,9 @@ import {
 } from './dish-image-pollinations';
 import { parseCommaSeparatedFilter } from './feed-filters.util';
 import {
+  canUserGenerateAiRecipe,
+} from './recipe-ai-access';
+import {
   RECIPE_RATING_MAX,
   roundRatingAverage,
 } from './recipe-rating.constants';
@@ -980,7 +983,10 @@ export class RecipesService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    if (!user.isPremium) {
+    const aiRecipeCount = await this.prisma.recipe.count({
+      where: { userId, isAI: true },
+    });
+    if (!canUserGenerateAiRecipe(user.isPremium, aiRecipeCount)) {
       throw new BadRequestException('Upgrade to premium');
     }
 
